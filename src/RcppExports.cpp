@@ -11,55 +11,387 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
-// rcpparma_hello_world
-arma::mat rcpparma_hello_world();
-RcppExport SEXP _MMCoxCL_rcpparma_hello_world() {
+// TmatL
+arma::umat TmatL(const arma::mat& Inspec, const arma::vec& Timepoints);
+RcppExport SEXP _MMCoxCL_TmatL(SEXP InspecSEXP, SEXP TimepointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpparma_hello_world());
+    Rcpp::traits::input_parameter< const arma::mat& >::type Inspec(InspecSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Timepoints(TimepointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(TmatL(Inspec, Timepoints));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_outerproduct
-arma::mat rcpparma_outerproduct(const arma::colvec& x);
-RcppExport SEXP _MMCoxCL_rcpparma_outerproduct(SEXP xSEXP) {
+// TmatR
+arma::umat TmatR(const arma::mat& Inspec, const arma::vec& Timepoints);
+RcppExport SEXP _MMCoxCL_TmatR(SEXP InspecSEXP, SEXP TimepointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_outerproduct(x));
+    Rcpp::traits::input_parameter< const arma::mat& >::type Inspec(InspecSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Timepoints(TimepointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(TmatR(Inspec, Timepoints));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_innerproduct
-double rcpparma_innerproduct(const arma::colvec& x);
-RcppExport SEXP _MMCoxCL_rcpparma_innerproduct(SEXP xSEXP) {
+// TmatLR
+arma::umat TmatLR(const arma::mat& Inspec, const arma::vec& Timepoints);
+RcppExport SEXP _MMCoxCL_TmatLR(SEXP InspecSEXP, SEXP TimepointsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_innerproduct(x));
+    Rcpp::traits::input_parameter< const arma::mat& >::type Inspec(InspecSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Timepoints(TimepointsSEXP);
+    rcpp_result_gen = Rcpp::wrap(TmatLR(Inspec, Timepoints));
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpparma_bothproducts
-Rcpp::List rcpparma_bothproducts(const arma::colvec& x);
-RcppExport SEXP _MMCoxCL_rcpparma_bothproducts(SEXP xSEXP) {
+// elementwise_pow
+arma::mat elementwise_pow(const arma::mat& A, const arma::mat& p);
+RcppExport SEXP _MMCoxCL_elementwise_pow(SEXP ASEXP, SEXP pSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const arma::colvec& >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(rcpparma_bothproducts(x));
+    Rcpp::traits::input_parameter< const arma::mat& >::type A(ASEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type p(pSEXP);
+    rcpp_result_gen = Rcpp::wrap(elementwise_pow(A, p));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Likelihood_rules
+arma::mat Likelihood_rules(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR);
+RcppExport SEXP _MMCoxCL_Likelihood_rules(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    rcpp_result_gen = Rcpp::wrap(Likelihood_rules(rules, beta, theta, gamma, Data, tL, tR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// WeightFunc
+arma::mat WeightFunc(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR);
+RcppExport SEXP _MMCoxCL_WeightFunc(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    rcpp_result_gen = Rcpp::wrap(WeightFunc(rules, beta, theta, gamma, Data, tL, tR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LogLikeliValue
+double LogLikeliValue(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR);
+RcppExport SEXP _MMCoxCL_LogLikeliValue(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLikeliValue(rules, beta, theta, gamma, Data, tL, tR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// TargetLogLikeliValue
+double TargetLogLikeliValue(const arma::vec& par, const arma::mat& rules, const arma::mat& Data);
+RcppExport SEXP _MMCoxCL_TargetLogLikeliValue(SEXP parSEXP, SEXP rulesSEXP, SEXP DataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::vec& >::type par(parSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    rcpp_result_gen = Rcpp::wrap(TargetLogLikeliValue(par, rules, Data));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LogLikeliValueInd
+double LogLikeliValueInd(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR);
+RcppExport SEXP _MMCoxCL_LogLikeliValueInd(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogLikeliValueInd(rules, beta, theta, gamma, Data, tL, tR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// Updateonce
+arma::field<arma::mat> Updateonce(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR, const arma::umat& tLR);
+RcppExport SEXP _MMCoxCL_Updateonce(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP, SEXP tLRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tLR(tLRSEXP);
+    rcpp_result_gen = Rcpp::wrap(Updateonce(rules, beta, theta, gamma, Data, tL, tR, tLR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateonceInd
+arma::field<arma::mat> UpdateonceInd(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR, const arma::umat& tLR);
+RcppExport SEXP _MMCoxCL_UpdateonceInd(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP, SEXP tLRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tLR(tLRSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateonceInd(rules, beta, theta, gamma, Data, tL, tR, tLR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MainFuncClosd
+arma::field<arma::mat> MainFuncClosd(const arma::mat& Data, const arma::mat& rules, const double& Tol);
+RcppExport SEXP _MMCoxCL_MainFuncClosd(SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    rcpp_result_gen = Rcpp::wrap(MainFuncClosd(Data, rules, Tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MainFuncClosdInd
+arma::field<arma::mat> MainFuncClosdInd(const arma::mat& Data, const arma::mat& rules, const double& Tol);
+RcppExport SEXP _MMCoxCL_MainFuncClosdInd(SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    rcpp_result_gen = Rcpp::wrap(MainFuncClosdInd(Data, rules, Tol));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateonceProfileBeta
+arma::field<arma::mat> UpdateonceProfileBeta(const arma::uword& Indicator, const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR, const arma::umat& tLR);
+RcppExport SEXP _MMCoxCL_UpdateonceProfileBeta(SEXP IndicatorSEXP, SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP, SEXP tLRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tLR(tLRSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateonceProfileBeta(Indicator, rules, beta, theta, gamma, Data, tL, tR, tLR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateonceProfileBetaInd
+arma::field<arma::mat> UpdateonceProfileBetaInd(const arma::uword& Indicator, const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR, const arma::umat& tLR);
+RcppExport SEXP _MMCoxCL_UpdateonceProfileBetaInd(SEXP IndicatorSEXP, SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP, SEXP tLRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tLR(tLRSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateonceProfileBetaInd(Indicator, rules, beta, theta, gamma, Data, tL, tR, tLR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateonceProfileTheta
+arma::field<arma::mat> UpdateonceProfileTheta(const arma::mat& rules, const arma::mat& beta, const double& theta, const arma::mat& gamma, const arma::mat& Data, const arma::umat& tL, const arma::umat& tR, const arma::umat& tLR);
+RcppExport SEXP _MMCoxCL_UpdateonceProfileTheta(SEXP rulesSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP DataSEXP, SEXP tLSEXP, SEXP tRSEXP, SEXP tLRSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tL(tLSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tR(tRSEXP);
+    Rcpp::traits::input_parameter< const arma::umat& >::type tLR(tLRSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateonceProfileTheta(rules, beta, theta, gamma, Data, tL, tR, tLR));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LogProfileLikeli
+double LogProfileLikeli(const arma::uword& Indicator, const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma);
+RcppExport SEXP _MMCoxCL_LogProfileLikeli(SEXP IndicatorSEXP, SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogProfileLikeli(Indicator, Data, rules, Tol, beta, theta, gamma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// LogProfileLikeliInd
+double LogProfileLikeliInd(const arma::uword& Indicator, const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma);
+RcppExport SEXP _MMCoxCL_LogProfileLikeliInd(SEXP IndicatorSEXP, SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    rcpp_result_gen = Rcpp::wrap(LogProfileLikeliInd(Indicator, Data, rules, Tol, beta, theta, gamma));
+    return rcpp_result_gen;
+END_RCPP
+}
+// FindSolution
+double FindSolution(const arma::uword& Indicator, const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma, const double& Tol2, const double& TheConst, const arma::vec& Initial);
+RcppExport SEXP _MMCoxCL_FindSolution(SEXP IndicatorSEXP, SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP Tol2SEXP, SEXP TheConstSEXP, SEXP InitialSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol2(Tol2SEXP);
+    Rcpp::traits::input_parameter< const double& >::type TheConst(TheConstSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Initial(InitialSEXP);
+    rcpp_result_gen = Rcpp::wrap(FindSolution(Indicator, Data, rules, Tol, beta, theta, gamma, Tol2, TheConst, Initial));
+    return rcpp_result_gen;
+END_RCPP
+}
+// FindSolutionInd
+double FindSolutionInd(const arma::uword& Indicator, const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma, const double& Tol2, const double& TheConst, const arma::vec& Initial);
+RcppExport SEXP _MMCoxCL_FindSolutionInd(SEXP IndicatorSEXP, SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP Tol2SEXP, SEXP TheConstSEXP, SEXP InitialSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::uword& >::type Indicator(IndicatorSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol2(Tol2SEXP);
+    Rcpp::traits::input_parameter< const double& >::type TheConst(TheConstSEXP);
+    Rcpp::traits::input_parameter< const arma::vec& >::type Initial(InitialSEXP);
+    rcpp_result_gen = Rcpp::wrap(FindSolutionInd(Indicator, Data, rules, Tol, beta, theta, gamma, Tol2, TheConst, Initial));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ComputeCI
+arma::mat ComputeCI(const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma, const double& Tol2, const double& TheConst);
+RcppExport SEXP _MMCoxCL_ComputeCI(SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP Tol2SEXP, SEXP TheConstSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol2(Tol2SEXP);
+    Rcpp::traits::input_parameter< const double& >::type TheConst(TheConstSEXP);
+    rcpp_result_gen = Rcpp::wrap(ComputeCI(Data, rules, Tol, beta, theta, gamma, Tol2, TheConst));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ComputeCIInd
+arma::mat ComputeCIInd(const arma::mat& Data, const arma::mat& rules, const double& Tol, const arma::mat& beta, const double& theta, const arma::mat& gamma, const double& Tol2, const double& TheConst);
+RcppExport SEXP _MMCoxCL_ComputeCIInd(SEXP DataSEXP, SEXP rulesSEXP, SEXP TolSEXP, SEXP betaSEXP, SEXP thetaSEXP, SEXP gammaSEXP, SEXP Tol2SEXP, SEXP TheConstSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type Data(DataSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type rules(rulesSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol(TolSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type theta(thetaSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type gamma(gammaSEXP);
+    Rcpp::traits::input_parameter< const double& >::type Tol2(Tol2SEXP);
+    Rcpp::traits::input_parameter< const double& >::type TheConst(TheConstSEXP);
+    rcpp_result_gen = Rcpp::wrap(ComputeCIInd(Data, rules, Tol, beta, theta, gamma, Tol2, TheConst));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_MMCoxCL_rcpparma_hello_world", (DL_FUNC) &_MMCoxCL_rcpparma_hello_world, 0},
-    {"_MMCoxCL_rcpparma_outerproduct", (DL_FUNC) &_MMCoxCL_rcpparma_outerproduct, 1},
-    {"_MMCoxCL_rcpparma_innerproduct", (DL_FUNC) &_MMCoxCL_rcpparma_innerproduct, 1},
-    {"_MMCoxCL_rcpparma_bothproducts", (DL_FUNC) &_MMCoxCL_rcpparma_bothproducts, 1},
+    {"_MMCoxCL_TmatL", (DL_FUNC) &_MMCoxCL_TmatL, 2},
+    {"_MMCoxCL_TmatR", (DL_FUNC) &_MMCoxCL_TmatR, 2},
+    {"_MMCoxCL_TmatLR", (DL_FUNC) &_MMCoxCL_TmatLR, 2},
+    {"_MMCoxCL_elementwise_pow", (DL_FUNC) &_MMCoxCL_elementwise_pow, 2},
+    {"_MMCoxCL_Likelihood_rules", (DL_FUNC) &_MMCoxCL_Likelihood_rules, 7},
+    {"_MMCoxCL_WeightFunc", (DL_FUNC) &_MMCoxCL_WeightFunc, 7},
+    {"_MMCoxCL_LogLikeliValue", (DL_FUNC) &_MMCoxCL_LogLikeliValue, 7},
+    {"_MMCoxCL_TargetLogLikeliValue", (DL_FUNC) &_MMCoxCL_TargetLogLikeliValue, 3},
+    {"_MMCoxCL_LogLikeliValueInd", (DL_FUNC) &_MMCoxCL_LogLikeliValueInd, 7},
+    {"_MMCoxCL_Updateonce", (DL_FUNC) &_MMCoxCL_Updateonce, 8},
+    {"_MMCoxCL_UpdateonceInd", (DL_FUNC) &_MMCoxCL_UpdateonceInd, 8},
+    {"_MMCoxCL_MainFuncClosd", (DL_FUNC) &_MMCoxCL_MainFuncClosd, 3},
+    {"_MMCoxCL_MainFuncClosdInd", (DL_FUNC) &_MMCoxCL_MainFuncClosdInd, 3},
+    {"_MMCoxCL_UpdateonceProfileBeta", (DL_FUNC) &_MMCoxCL_UpdateonceProfileBeta, 9},
+    {"_MMCoxCL_UpdateonceProfileBetaInd", (DL_FUNC) &_MMCoxCL_UpdateonceProfileBetaInd, 9},
+    {"_MMCoxCL_UpdateonceProfileTheta", (DL_FUNC) &_MMCoxCL_UpdateonceProfileTheta, 8},
+    {"_MMCoxCL_LogProfileLikeli", (DL_FUNC) &_MMCoxCL_LogProfileLikeli, 7},
+    {"_MMCoxCL_LogProfileLikeliInd", (DL_FUNC) &_MMCoxCL_LogProfileLikeliInd, 7},
+    {"_MMCoxCL_FindSolution", (DL_FUNC) &_MMCoxCL_FindSolution, 10},
+    {"_MMCoxCL_FindSolutionInd", (DL_FUNC) &_MMCoxCL_FindSolutionInd, 10},
+    {"_MMCoxCL_ComputeCI", (DL_FUNC) &_MMCoxCL_ComputeCI, 8},
+    {"_MMCoxCL_ComputeCIInd", (DL_FUNC) &_MMCoxCL_ComputeCIInd, 8},
     {NULL, NULL, 0}
 };
 

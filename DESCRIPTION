@@ -1,11 +1,12 @@
 Package: MMCoxCL
 Type: Package
-Title: What the package does (short line)
+Title: Function for fitting the Cox model to clustered interval-censored data using a novel minorize-maximiz algorithm
 Version: 1.0
 Date: 2022-09-03
-Author: Who wrote it
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
-License: What license is it under?
-Imports: Rcpp (>= 1.0.8)
+Author: Tong Wang, Kejun He,  Samiran Sinha
+Maintainer: Tong Wang <wangtong@nankai.edu.cn>
+Description: parameter estimation and confidence interval calculation for the Cox model with clustered interval-censored data. The code can also handle the non-clustered data scenario. This package contains two functions, Cox_est and SIM_DATA. Cox_est is used for analyzing data using the methodology proposed in Wang et al. SIM_DATA is used for simulating clustered/nonclustered current status data using the Cox model.
+License: Unlimited
+Imports: Rcpp (>= 1.0.4.6),gaussquad,extraDistr,fda,splines2,nleqslv,numDeriv
+Depends: gaussquad
 LinkingTo: Rcpp, RcppArmadillo
