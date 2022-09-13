@@ -44,12 +44,14 @@ H=function(t) t^3 # specify the H function
 
 #Scenario 1
 #There is clustering effect.
+H=function(t) t^(3)
 data=SIM_DATA(beta=c(0.5,0.5),theta=0.5,n=100,H=H,k=10)
 #estimate the parameters
 result=Cox_est(data)
 
 #Scenario 2
 #There is not clustering effect.
+H=function(t) t^(3)
 data=SIM_DATA(beta=c(0.5,0.5),theta=0,n=100,H=H,k=10)
 #estimate the parameters
 result=Cox_est(data,Cluster.ind=FALSE)
