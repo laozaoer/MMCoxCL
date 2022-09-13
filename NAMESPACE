@@ -1,4 +1,4 @@
 useDynLib(MMCoxCL, .registration=TRUE)
 importFrom(Rcpp, evalCpp)
 importFrom(gaussquad)
-exportPattern("Cox_est")
+exportPattern("Cox_est","SIM_DATA")
