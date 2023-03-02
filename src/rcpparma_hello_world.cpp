@@ -159,7 +159,7 @@ double TargetLogLikeliValue(const arma::vec&par,const arma::mat&rules,const arma
     
     arma::umat tL=TmatL(join_rows(Data.col(1),Data.col(2)),tk);
     arma::umat tR=TmatR(join_rows(Data.col(1),Data.col(2)),tk);
-
+    
     arma::mat beta=par.subvec(0,betadim-1);
     double theta=par(betadim);
     arma::mat gamma=par.subvec(betadim+1,par.n_elem-1);
@@ -286,7 +286,9 @@ arma::field<arma::mat> Updateonce(const arma::mat&rules,const arma::mat&beta,con
     lastpar.subvec(0,beta.n_rows-1)=beta;
     lastpar(beta.n_rows)=std::log(theta);
     
-    arma::vec updatePar=lastpar-solve(SecondDeriv,FirstDeriv);
+    arma::mat SecondDerivdiag=SecondDeriv.diag();
+    
+    arma::vec updatePar=lastpar-FirstDeriv/SecondDerivdiag/FirstDeriv.n_rows;
     updatePar(beta.n_rows)=std::exp(updatePar(beta.n_rows));
     
     
@@ -471,7 +473,7 @@ arma::field<arma::mat> MainFuncClosdInd(const arma::mat&Data,const arma::mat&rul
     double maxR=Rinspection.max();
     arma::uvec tkfinity=find(tk<=(maxL)&&tk<=(maxR));
     tk=tk(tkfinity);
-
+    
     
     
     arma::mat L=Data.col(1);
@@ -485,7 +487,7 @@ arma::field<arma::mat> MainFuncClosdInd(const arma::mat&Data,const arma::mat&rul
     double theta0=0.5;
     double absdiff=1000;
     arma::mat betatheta;
-
+    
     arma::field<arma::mat> newresult;
     int iter=1;
     do{ 
@@ -499,7 +501,7 @@ arma::field<arma::mat> MainFuncClosdInd(const arma::mat&Data,const arma::mat&rul
         arma::mat Totalold=oldbeta;
         absdiff=accu(abs((Totalold-Totalnew)%pow(Totalold,-1)));
         iter=iter+1;
-
+        
         
     } while (iter<500&absdiff>Tol);
     double LogLike=LogLikeliValueInd(rules,beta0,theta0,gamma0,Data,tL,tR);
@@ -609,7 +611,12 @@ arma::field<arma::mat> UpdateonceProfileBeta(const arma::uword&Indicator,const a
         lastpar.subvec(0,beta.n_rows-2)=Deletebeta;
         lastpar(beta.n_rows-1)=std::log(theta);
         
-        updatePar=lastpar-solve(SecondDeriv,FirstDeriv);
+        // updatePar=lastpar-solve(SecondDeriv,FirstDeriv);
+        
+        arma::mat SecondDerivdiag=SecondDeriv.diag();
+        
+        updatePar=lastpar-FirstDeriv/SecondDerivdiag/FirstDeriv.n_rows;
+        
         updatePar(beta.n_rows-1)=std::exp(updatePar(beta.n_rows-1));
         
         updatePar.insert_rows(Indicator-1,beta.row(Indicator-1));
@@ -624,7 +631,7 @@ arma::field<arma::mat> UpdateonceProfileBeta(const arma::uword&Indicator,const a
 
 // [[Rcpp::export]]
 arma::field<arma::mat> UpdateonceProfileBetaInd(const arma::uword&Indicator,const arma::mat&rules,const arma::mat&beta,const double&theta,const arma::mat&gamma,const arma::mat&Data,
-                                             const arma::umat&tL,const arma::umat&tR,const arma::umat&tLR){
+                                                const arma::umat&tL,const arma::umat&tR,const arma::umat&tLR){
     arma::mat WeightMat=WeightFunc(rules,beta,theta,gamma,Data,tL,tR);
     arma::mat index=sort(unique(Data.col(0)));
     int n=index.n_rows;
@@ -708,17 +715,17 @@ arma::field<arma::mat> UpdateonceProfileBetaInd(const arma::uword&Indicator,cons
     arma::mat Deletebeta=beta;
     Deletebeta.shed_row(Indicator-1);
     arma::vec updatePar;
-
+    
     if(beta.n_rows==1){
-
+        
         updatePar=beta;
     }else{
         
         
         lastpar.subvec(0,beta.n_rows-2)=Deletebeta;
-
+        
         updatePar=lastpar-solve(SecondDeriv,FirstDeriv);
-
+        
         updatePar.insert_rows(Indicator-1,beta.row(Indicator-1));
     }
     arma::field<arma::mat> result(2);
@@ -948,62 +955,62 @@ double LogProfileLikeli(const arma::uword&Indicator,const arma::mat&Data,const a
 // [[Rcpp::export]]
 double LogProfileLikeliInd(const arma::uword&Indicator,const arma::mat&Data,const arma::mat&rules,const double&Tol,const arma::mat&beta,const double&theta,const arma::mat&gamma){
     
-        int betadim=Data.n_cols-5;
+    int betadim=Data.n_cols-5;
+    
+    arma::mat tktemp=sort(unique(join_cols(Data.col(1),Data.col(2))));
+    arma::vec tk=tktemp.col(0);
+    tk=tk.subvec(1,tk.n_elem-2);
+    
+    double maxL=Data.col(1).max();
+    arma::mat Rinspection=Data.col(2);
+    Rinspection=Rinspection.rows(find(Rinspection<std::pow(10,10)));
+    double maxR=Rinspection.max();
+    arma::uvec tkfinity=find(tk<=(maxL)&&tk<=(maxR));
+    tk=tk(tkfinity);
+    
+    arma::mat L=Data.col(1);
+    arma::mat R=Data.col(2);
+    
+    arma::umat tL=TmatL(join_rows(Data.col(1),Data.col(2)),tk);
+    arma::umat tR=TmatR(join_rows(Data.col(1),Data.col(2)),tk);
+    arma::umat tLR=TmatLR(join_rows(Data.col(1),Data.col(2)),tk);
+    arma::mat beta0=beta;
+    arma::mat gamma0=gamma;
+    double theta0=theta;
+    double absdiff=1000;
+    arma::mat betatheta;
+    // arma::mat gammaold=gamma0;
+    // arma::mat betaold=beta0;
+    // double thetaold=theta0;
+    // arma::mat Totalold=join_cols(gammaold,betaold,arma::ones(1,1)*thetaold);
+    arma::field<arma::mat> newresult;
+    int iter=1;
+    do{
+        arma::mat oldbeta=beta0;
+        arma::mat oldgamma=gamma0;
         
-        arma::mat tktemp=sort(unique(join_cols(Data.col(1),Data.col(2))));
-        arma::vec tk=tktemp.col(0);
-        tk=tk.subvec(1,tk.n_elem-2);
+        newresult=UpdateonceProfileBetaInd(Indicator,rules,beta0,theta0,gamma0,Data,tL,tR,tLR);
+        gamma0=newresult(0);
+        betatheta=newresult(1);
+        beta0=betatheta.submat(0,0,betadim-1,0);
+        arma::mat Totalnew=newresult(1);
+        arma::mat Totalold=oldbeta;
+        absdiff=accu(abs((Totalold-Totalnew)%pow(Totalold,-1)));
+        iter=iter+1;
+        // std::cout<<iter;
+        // std::cout<<absdiff;
         
-        double maxL=Data.col(1).max();
-        arma::mat Rinspection=Data.col(2);
-        Rinspection=Rinspection.rows(find(Rinspection<std::pow(10,10)));
-        double maxR=Rinspection.max();
-        arma::uvec tkfinity=find(tk<=(maxL)&&tk<=(maxR));
-        tk=tk(tkfinity);
         
-        arma::mat L=Data.col(1);
-        arma::mat R=Data.col(2);
         
-        arma::umat tL=TmatL(join_rows(Data.col(1),Data.col(2)),tk);
-        arma::umat tR=TmatR(join_rows(Data.col(1),Data.col(2)),tk);
-        arma::umat tLR=TmatLR(join_rows(Data.col(1),Data.col(2)),tk);
-        arma::mat beta0=beta;
-        arma::mat gamma0=gamma;
-        double theta0=theta;
-        double absdiff=1000;
-        arma::mat betatheta;
-        // arma::mat gammaold=gamma0;
-        // arma::mat betaold=beta0;
-        // double thetaold=theta0;
-        // arma::mat Totalold=join_cols(gammaold,betaold,arma::ones(1,1)*thetaold);
-        arma::field<arma::mat> newresult;
-        int iter=1;
-        do{
-            arma::mat oldbeta=beta0;
-            arma::mat oldgamma=gamma0;
-            
-            newresult=UpdateonceProfileBetaInd(Indicator,rules,beta0,theta0,gamma0,Data,tL,tR,tLR);
-            gamma0=newresult(0);
-            betatheta=newresult(1);
-            beta0=betatheta.submat(0,0,betadim-1,0);
-            arma::mat Totalnew=newresult(1);
-            arma::mat Totalold=oldbeta;
-            absdiff=accu(abs((Totalold-Totalnew)%pow(Totalold,-1)));
-            iter=iter+1;
-            // std::cout<<iter;
-            // std::cout<<absdiff;
-            
-
-            
-        } while (iter<500&absdiff>Tol);
-        arma::field<arma::mat> finalresult(4);
-        finalresult(0)=newresult(0);
-        finalresult(1)=newresult(1);
-        finalresult(2)=arma::ones(1,1)*absdiff;
-        finalresult(3)=arma::ones(1,1)*iter;
-        // return finalresult;
-        double LogLike=LogLikeliValue(rules,beta0,theta0,finalresult(0),Data,tL,tR);
-        return LogLike;
+    } while (iter<500&absdiff>Tol);
+    arma::field<arma::mat> finalresult(4);
+    finalresult(0)=newresult(0);
+    finalresult(1)=newresult(1);
+    finalresult(2)=arma::ones(1,1)*absdiff;
+    finalresult(3)=arma::ones(1,1)*iter;
+    // return finalresult;
+    double LogLike=LogLikeliValue(rules,beta0,theta0,finalresult(0),Data,tL,tR);
+    return LogLike;
     
     
 }
@@ -1060,31 +1067,31 @@ double FindSolution(const arma::uword&Indicator,const arma::mat&Data,const arma:
 
 // [[Rcpp::export]]
 double FindSolutionInd(const arma::uword&Indicator,const arma::mat&Data,const arma::mat&rules,const double&Tol,const arma::mat&beta,const double&theta,const arma::mat&gamma,
-                    const double&Tol2,const double&TheConst,const arma::vec&Initial){
+                       const double&Tol2,const double&TheConst,const arma::vec&Initial){
     
-        double Initial_L=Initial(0);
-        double Initial_R=Initial(1);
-        double Initial_Ave;
-        arma::mat beta0=beta;
-        arma::mat gamma0=gamma;
-        double theta0=theta;
-        do{
-            Initial_Ave=(Initial_L+Initial_R)/2;
-            beta0(Indicator-1,0)=Initial_Ave;
-            double plAve;
-            
-            plAve=LogProfileLikeliInd(Indicator,Data,rules,Tol,beta0,theta0,gamma0)-TheConst;
-            if(plAve<0){
-                Initial_L=Initial_Ave;
-            }
-            else{
-                Initial_R=Initial_Ave;
-            }
-            
-        } while (std::abs(Initial_R-Initial_L)>Tol2);
-        return Initial_Ave;
+    double Initial_L=Initial(0);
+    double Initial_R=Initial(1);
+    double Initial_Ave;
+    arma::mat beta0=beta;
+    arma::mat gamma0=gamma;
+    double theta0=theta;
+    do{
+        Initial_Ave=(Initial_L+Initial_R)/2;
+        beta0(Indicator-1,0)=Initial_Ave;
+        double plAve;
+        
+        plAve=LogProfileLikeliInd(Indicator,Data,rules,Tol,beta0,theta0,gamma0)-TheConst;
+        if(plAve<0){
+            Initial_L=Initial_Ave;
+        }
+        else{
+            Initial_R=Initial_Ave;
+        }
+        
+    } while (std::abs(Initial_R-Initial_L)>Tol2);
+    return Initial_Ave;
     
-
+    
 }
 
 
@@ -1112,7 +1119,7 @@ arma::mat ComputeCI(const arma::mat&Data,const arma::mat&rules,const double&Tol,
 
 // [[Rcpp::export]]
 arma::mat ComputeCIInd(const arma::mat&Data,const arma::mat&rules,const double&Tol,const arma::mat&beta,const double&theta,const arma::mat&gamma,
-                    const double&Tol2,const double&TheConst){
+                       const double&Tol2,const double&TheConst){
     arma::mat TotalEst=(beta);
     int Totaldim=beta.n_rows;
     arma::mat result=arma::zeros(Totaldim,2);

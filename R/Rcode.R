@@ -167,3 +167,4 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
   }
   return(result)
 }
+
