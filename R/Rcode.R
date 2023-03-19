@@ -135,9 +135,41 @@ SIM_DATA=function(beta,theta,n,H,k){
 
 
 Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
+  betadim=ncol(Data)-5
+  raw_num=nrow(Data)
+  cluster_num=length(unique(Data[,1]))
+  NAindex=rowSums(is.na(Data))==0
+  if(sum(NAindex)==raw_num){
+    printresult=paste('The data frame has', raw_num, 'many observations, with', cluster_num, 'level two units (clusters), and', betadim, 'covariates, and there is no missing value in the data')
+  }else{
+    diff=raw_num-sum(NAindex)
+    Data=Data[NAindex,]
+    raw_num=nrow(Data)
+    cluster_num=length(unique(Data[,1]))
+    printresult=paste('The data frame has', raw_num, 'many observations, with', cluster_num, 'level two units (clusters), and', betadim, 'covariates after removing', diff ,'rows with missing values')
+    
+  }
+  print(printresult)
+  
+  
+  
+  
+  for(i in 6:ncol(Data)){
+    if(is.character(Data[,i])){
+      Data[,i]=model.matrix(~Data[,i])[, -1] 
+    }
+  }
+  
+  cluster_num=length(unique(Data[,1]))
+  if(cluster_num==nrow(Data)){
+    Cluster.ind=FALSE
+    printresult=paste('Since the number of level one units is one within each level two unit, this is not a clustered data. So all observations are treated as independent and identically distributed')
+    print(printresult)
+  }
   if(Cluster.ind){
-    myD=Data
+    myD=as.matrix(Data)
     betadim=ncol(myD)-5
+
     myrules=hermite.h.quadrature.rules(20,normalized=FALSE)
     myrules=as.matrix(myrules[[20]])
     bDep=MainFuncClosd(myD,myrules,Tol)
@@ -145,14 +177,16 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
     CIest=ComputeCI(myD,myrules,0.001,as.matrix(bDep[[2]][1:betadim]),bDep[[2]][betadim+1],as.matrix(bDep[[1]]),0.001,TheConst)
     result=cbind(bDep[[2]],CIest)
     result=as.data.frame(result)
-    for(i in 1:betadim){
-      rownames(result)[i]=paste("beta",i,sep = "_")
-    }
+    col_names=colnames(myD)
+    rownames(result)[1:betadim]=col_names[6:ncol(myD)]
+    # for(i in 1:betadim){
+    #   rownames(result)[i]=paste("beta",i,sep = "_")
+    # }
     rownames(result)[betadim+1]="theta"
     colnames(result)=c("Est","LB","UB")
   }
   else{
-    myD=Data
+    myD=as.matrix(Data)
     betadim=ncol(myD)-5
     myrulesInd=matrix(c(0,0.5,0,0.5),2,2,byrow = TRUE)
     bInd=MainFuncClosdInd(myD,myrulesInd,Tol)
@@ -160,9 +194,8 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
     CIest=ComputeCIInd(myD,myrulesInd,0.001,as.matrix(bInd[[2]][1:betadim]),bInd[[2]][betadim],as.matrix(bInd[[1]]),0.001,TheConst)
     result=cbind(bInd[[2]],CIest)
     result=as.data.frame(result)
-    for(i in 1:betadim){
-      rownames(result)[i]=paste("beta",i,sep = "_")
-    }
+    col_names=colnames(myD)
+    rownames(result)[1:betadim]=col_names[6:ncol(myD)]
     colnames(result)=c("Est","LB","UB")
   }
   return(result)
