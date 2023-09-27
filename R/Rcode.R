@@ -231,7 +231,7 @@ Cox_LR=function(Data){
   return(result)
 }
 
-Only_Cox_est = function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
+Only_Cox_est = function(Data,Cluster.ind=TRUE,Tol=1e-5){
   betadim=ncol(Data)-5
   raw_num=nrow(Data)
   cluster_num=length(unique(Data[,1]))
