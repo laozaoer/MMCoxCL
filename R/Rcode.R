@@ -69,6 +69,9 @@ data_for_est=function(r,beta,gamma,theta,n,H){
   
   return(list(X=X,Z=Z,n=n,ni=mi,r=r,Delta=Delta,C=C))
 }
+
+
+# Code for data simulation
 SIM_DATA=function(beta,theta,n,H,k){
   r=0
   gamma=c(0)
@@ -134,7 +137,7 @@ SIM_DATA=function(beta,theta,n,H,k){
 }
 
 
-
+# Code for the parameters estimation along with the confidence interval calculation
 Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
   betadim=ncol(Data)-5
   raw_num=nrow(Data)
@@ -173,17 +176,15 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
 
     myrules=hermite.h.quadrature.rules(20,normalized=FALSE)
     myrules=as.matrix(myrules[[20]])
+    # Call cpp function for parameter estimation    
     bDep=MainFuncClosd(myD,myrules,Tol)
     TheConst=bDep[[3]]-qchisq(CIlevel,1)/2
+    # call cpp function for confidence interval calculation, it requires the parameter estimates.    
     CIest=ComputeCI(myD,myrules,0.001,as.matrix(bDep[[2]][1:betadim]),bDep[[2]][betadim+1],as.matrix(bDep[[1]]),0.001,TheConst)
     result=cbind(bDep[[2]],CIest)
     result=as.data.frame(result)
     col_names=colnames(Data)
     rownames(result)[1:betadim]=col_names[6:ncol(myD)]
-    
-    # for(i in 1:betadim){
-    #   rownames(result)[i]=paste("beta",i,sep = "_")
-    # }
     rownames(result)[betadim+1]="theta"
     colnames(result)=c("Est","LB","UB")
   }
@@ -191,8 +192,10 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
     myD=as.matrix(Data)
     betadim=ncol(myD)-5
     myrulesInd=matrix(c(0,0.5,0,0.5),2,2,byrow = TRUE)
+    # Call cpp function for parameter estimation    
     bInd=MainFuncClosdInd(myD,myrulesInd,Tol)
     TheConst=bInd[[3]]-qchisq(CIlevel,1)/2
+    # call cpp function for confidence interval calculation, it requires the parameter estimates.     
     CIest=ComputeCIInd(myD,myrulesInd,0.001,as.matrix(bInd[[2]][1:betadim]),bInd[[2]][betadim],as.matrix(bInd[[1]]),0.001,TheConst)
     result=cbind(bInd[[2]],CIest)
     result=as.data.frame(result)
@@ -202,7 +205,7 @@ Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
   }
   return(result)
 }
-
+# Code for likelihood-ratio test
 Cox_LR=function(Data){
   betadim=ncol(Data)-5
   raw_num=nrow(Data)
@@ -230,7 +233,7 @@ Cox_LR=function(Data){
   colnames(result)=c('test statistic','p-value')
   return(result)
 }
-
+# Code for the parameters estimation
 Only_Cox_est = function(Data,Cluster.ind=TRUE,Tol=1e-5){
   betadim=ncol(Data)-5
   raw_num=nrow(Data)
