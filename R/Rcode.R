@@ -72,74 +72,7 @@ data_for_est=function(r,beta,gamma,theta,n,H){
 
 
 # Code for data simulation
-SIM_DATA=function(beta,theta,n,H,k){
-  r=0
-  gamma=c(0)
-  betadim=length(beta)
-  gammadim=length(gamma)
-  Z=matrix(runif(n*gammadim,-1,1),nrow = n,ncol = gammadim)
-  mi=rep(0,n)
-  b=rnorm(n,0,1)
-  for(i in 1:n){
-    mi[i]=sample(c(1:k),1)
-  }
-  C=list()
-  length(C)=n
-  for(i in 1:n){
-    C[[i]]=runif(mi[i],0,1)
-  }
-  X=list()
-  length(X)=n
-  for (i in 1:n) {
-    X[[i]]=cbind(runif(mi[i],-1,1),rbinom(mi[i],1,0.5))
-  }
-  
-  
-  
-  rawC=suppressWarnings(Generate_T(X,Z,b,r,beta,gamma,theta,n,mi,H))
-  lowC=quantile(as.numeric(as.character(unlist(rawC))),probs = 0.45)
-  upC=quantile(as.numeric(as.character(unlist(rawC))),probs = 0.9)
-  
-  
-  
-  for(i in 1:n){
-    C[[i]]=cbind(runif(mi[i],0,lowC),runif(mi[i],lowC,upC))
-  }
-  Delta=list()
-  length(Delta)=n
-  for (i in 1:n) {
-    Delta[[i]]=matrix(0,nrow=mi[i],2)
-    for (j in 1:mi[i]) {
-      if(rawC[[i]][j]<=C[[i]][j,1]){
-        Delta[[i]][j,1]=1
-      }else if(rawC[[i]][j]>C[[i]][j,2]){
-        Delta[[i]][j,2]=1
-      }
-    }
-  }
-  for (i in 1:n) {
-    for(j in 1:mi[i]){
-      if(Delta[[i]][j,1]==1){
-        C[[i]][j,]=c(0,C[[i]][j,1])
-      }else if(Delta[[i]][j,2]==1){
-        C[[i]][j,]=c(C[[i]][j,2],Inf)
-      }
-    }
-  }
-  data=list(X=X,Z=Z,n=n,ni=mi,r=r,Delta=Delta,C=C)
-  result=c()
-  for(i in 1:data$n){
-    resultI=cbind(rep(i,data$ni[i]),data$C[[i]],data$Delta[[i]],data$X[[i]])
-    result=rbind(result,resultI)
-  }
-  result=as.data.frame(result)
-  return(result)
-}
-
-
-
-
-SIM_DATA_NEW <- function(beta, theta, n, H, k) {
+SIM_DATA <- function(beta, theta, n, H, k) {
   r <- 0
   gamma <- c(0)
   betadim <- length(beta)
