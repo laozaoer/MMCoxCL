@@ -137,6 +137,73 @@ SIM_DATA=function(beta,theta,n,H,k){
 }
 
 
+
+
+SIM_DATA_NEW <- function(beta, theta, n, H, k) {
+  r <- 0
+  gamma <- c(0)
+  betadim <- length(beta)
+  gammadim <- length(gamma)
+  Z <- matrix(runif(n * gammadim, -1, 1), nrow = n, ncol = gammadim)
+  b <- rnorm(n, 0, 1)
+  
+  # Initialize mi with 2s, similar to NN in the MATLAB code
+  mi <- rep(2, n)
+  AA <- runif(n)
+  mi[AA < 0.2] <- 1 # 20% of IDs will have only 1 observation
+  mi[AA > 0.9] <- 3 # 10% of IDs will have 3 observations
+  
+  C <- vector("list", n)
+  for (i in 1:n) {
+    C[[i]] <- runif(mi[i], 0, 1)
+  }
+  
+  X <- vector("list", n)
+  for (i in 1:n) {
+    X[[i]] <- cbind(runif(mi[i], -1, 1), rbinom(mi[i], 1, 0.5))
+  }
+  
+  rawC=suppressWarnings(MMCoxCL::Generate_T(X,Z,b,r,beta,gamma,theta,n,mi,H))
+  lowC=quantile(as.numeric(as.character(unlist(rawC))),probs = 0.45)
+  upC=quantile(as.numeric(as.character(unlist(rawC))),probs = 0.9)
+  
+  
+  
+  for(i in 1:n){
+    C[[i]]=cbind(runif(mi[i],0,lowC),runif(mi[i],lowC,upC))
+  }
+  Delta=list()
+  length(Delta)=n
+  for (i in 1:n) {
+    Delta[[i]]=matrix(0,nrow=mi[i],2)
+    for (j in 1:mi[i]) {
+      if(rawC[[i]][j]<=C[[i]][j,1]){
+        Delta[[i]][j,1]=1
+      }else if(rawC[[i]][j]>C[[i]][j,2]){
+        Delta[[i]][j,2]=1
+      }
+    }
+  }
+  for (i in 1:n) {
+    for(j in 1:mi[i]){
+      if(Delta[[i]][j,1]==1){
+        C[[i]][j,]=c(0,C[[i]][j,1])
+      }else if(Delta[[i]][j,2]==1){
+        C[[i]][j,]=c(C[[i]][j,2],Inf)
+      }
+    }
+  }
+  
+  result <- data.frame()
+  for (i in 1:n) {
+    resultI <- cbind(rep(i, mi[i]), C[[i]], Delta[[i]], X[[i]])
+    result <- rbind(result, resultI)
+  }
+  return(result)
+}
+
+
+
 # Code for the parameters estimation along with the confidence interval calculation
 Cox_est=function(Data,Cluster.ind=TRUE,CIlevel=0.95,Tol=1e-5){
   betadim=ncol(Data)-5
